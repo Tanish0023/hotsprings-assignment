@@ -1,0 +1,55 @@
+# General
+*.log
+*.env
+.env.local
+.DS_Store
+node_modules/
+dist/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python & Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+/media/
+/static/
+*.sqlite3
+Pipfile.lock
+
+# Django Migrations (Optional)
+**/migrations/*  
+!**/migrations/__init__.py  # Keep init file
+
+# Virtual Environments
+venv/
+.env
+*.venv
+*.virtualenv
+.envrc
+.pipenv/
+.pipfile.lock
+
+# React / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.next/  # If using Next.js
+frontend/.cache/
+
+# Build / Production
+build/
+coverage/
+public/static/
+
+# Editor / OS Files
+*.bak
+*.tmp
+Thumbs.db
+npm-debug.log
+yarn-debug.log
+yarn-error.log
