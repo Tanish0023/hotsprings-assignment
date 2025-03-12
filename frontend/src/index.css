@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-cover bg-center bg-no-repeat h-screen;
+  @apply bg-cover bg-center h-screen;
   background-image: url("background.jpg");
-  color: white;
 }

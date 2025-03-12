@@ -3,10 +3,10 @@ import Navbar from "./components/Navbar";
 
 const Layout = () => {
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex justify-center items-center w-full">
+      <div className="sm:p-5">
         <Outlet />
       </div>
     </div>
