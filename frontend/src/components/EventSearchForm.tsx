@@ -44,17 +44,16 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
     if (checked) {
       try {
         const response = await axios.get("https://ipinfo.io/json");
-        const { city, region, country, loc } = response.data;
+        const { city, region, country } = response.data;
 
-        const [latitude, longitude] = loc.split(",");
-        const formattedLocation = `${city}, ${region}, ${country} (${latitude},${longitude})`;
+        const formattedLocation = `${city}, ${region}, ${country}`;
 
         setValue("location", formattedLocation);
       } catch (error) {
         console.error("Error detecting location:", error);
       }
     } else {
-      setValue("location", ""); // Reset location if unchecked
+      setValue("location", ""); 
     }
   };
 
