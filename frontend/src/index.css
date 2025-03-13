@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-cover bg-center h-screen;
+  @apply bg-cover bg-center h-screen bg-fixed;
   background-image: url("background.jpg");
 }
+

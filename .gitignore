@@ -33,6 +33,8 @@ venv/
 .envrc
 .pipenv/
 .pipfile.lock
+Backend_venv
+/Backend_venv/*
 
 # React / Frontend
 frontend/node_modules/
