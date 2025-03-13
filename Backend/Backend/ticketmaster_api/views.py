@@ -89,13 +89,19 @@ class EventDetailView(APIView):
             "name": data.get("name", "N/A"),
             "localDate": data["dates"]["start"].get("localDate", "N/A"),
             "localTime": data["dates"]["start"].get("localTime", "N/A"),
-            "artists": " | ".join([artist["name"] for artist in data["_embedded"].get("attractions", [])]) if "_embedded" in data and "attractions" in data["_embedded"] else "N/A",
-            "venue": data["_embedded"]["venues"][0]["name"] if "_embedded" in data and "venues" in data["_embedded"] else "N/A",
+            "artists": " | ".join([artist["name"] for artist in data["_embedded"].get("attractions", [])]),
+            "venue": data["_embedded"]["venues"][0]["name"],
             "genres": " | ".join([data["classifications"][0].get(key, {}).get("name", "N/A") for key in ["segment", "genre", "subGenre", "type", "subType"] if data["classifications"][0].get(key)]),
-            "priceRange": f"{data['priceRanges'][0]['min']} - {data['priceRanges'][0]['max']} {data['priceRanges'][0]['currency']}" if "priceRanges" in data else "N/A",
+            "priceRange": f"{data['priceRanges'][0]['min']} - {data['priceRanges'][0]['max']} {data['priceRanges'][0]['currency']}",
             "ticketStatus": data["dates"]["status"].get("code", "N/A"),
             "ticketUrl": data.get("url", "#"),
             "seatMap": data["seatmap"]["staticUrl"] if "seatmap" in data else None,
+            "address": data["_embedded"]["venues"][0]["address"].get("line1", "N/A"),
+            "city": f"{data['_embedded']['venues'][0]['city'].get('name', 'N/A')}, {data['_embedded']['venues'][0]['state'].get('name', 'N/A')}",
+            "phoneNumber": data["_embedded"]["venues"][0]["boxOfficeInfo"].get("phoneNumberDetail", "N/A"),
+            "openHours": data["_embedded"]["venues"][0]["boxOfficeInfo"].get("openHoursDetail", "N/A"),
+            "generalRule": data["_embedded"]["venues"][0]["generalInfo"].get("generalRule", "N/A"),
+            "childRule": data["_embedded"]["venues"][0]["generalInfo"].get("childRule", "N/A"),
         }
 
         serializer = EventDetailSerializer(event_data)
