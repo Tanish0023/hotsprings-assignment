@@ -1,4 +1,4 @@
-import { Facebook, Twitter } from 'lucide-react';
+import SocialShare from "./SocialShare";
 
 interface EventDetail{
     localDate: string;
@@ -53,14 +53,12 @@ const EventDetail = ({eventDetail}: EventDetailProps) => {
                     </div>
                 </div>
                 <div className="flex-1/2">
-                    <img src={`${eventDetail.seatMap}`} alt="" />
+                    <img src={`${eventDetail.seatMap}`} alt={`${eventDetail.venue}`} />
                 </div>
             </div>
 
             <div className="text-center mt-5 flex items-center justify-center gap-3">
-                <span>Share On: </span>
-                <Twitter />
-                <Facebook />
+                <SocialShare ticketUrl={eventDetail.ticketUrl}/>
             </div>
         </div>
      );

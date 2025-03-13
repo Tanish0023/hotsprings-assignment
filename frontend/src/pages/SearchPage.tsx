@@ -55,6 +55,8 @@ const CreateEventPage = () => {
     "seatMap": "https://mapsapi.tmol.io/maps/geometry/3/event/1C0061469E2820CF/staticImage?type=png&systemId=HOST",
     "venueName": "Stanford Stadium",
     "address": "625 Nelson Rd.",
+    "longitude": "-122.16062750",
+    "latitude": "37.43255840",
     "city": "Stanford, California",
     "phoneNumber": "N/A",
     "openHours": "The Stanford Stadium box office is open 9 AM to 3 PM, Monday through Friday, excluding holidays. Extended hours are dictated by event schedules. Please refer to the information for specific events here: https://gostanford.com/gameday-central",

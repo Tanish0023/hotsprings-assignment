@@ -85,7 +85,7 @@ export default function EventsCard({event}: EventCardProps) {
   const EventVenueProp = {
     venueName: event.venueName,
     address: event.address,
-    location: event.longitude,
+    longitude: event.longitude,
     latitude: event.latitude,
     city: event.city,
     phoneNumber: event.phoneNumber,

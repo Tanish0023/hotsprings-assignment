@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 interface EventVenue {
   venueName: string;
   address: string;
-  location: string;
+  longitude: string; 
   latitude: string;
   city: string;
   phoneNumber: string;
@@ -17,15 +18,27 @@ interface EventVenueProps {
   eventVenue: EventVenue;
 }
 
+const MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY!;
+
 const EventVenue = ({ eventVenue }: EventVenueProps) => {
   const [showFullOpenHours, setShowFullOpenHours] = useState(false);
   const [showFullGeneralRule, setShowFullGeneralRule] = useState(false);
   const [showFullChildRule, setShowFullChildRule] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false); 
+
+  const latitude = parseFloat(eventVenue.latitude);
+  const longitude = parseFloat(eventVenue.longitude);
+
+  const isValidLocation = !isNaN(latitude) && !isNaN(longitude);
+
+  const center = isValidLocation ? { lat: latitude, lng: longitude } : undefined;
+
+  const { isLoaded } = useJsApiLoader({ googleMapsApiKey: MAPS_API_KEY });
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row">
-        <div className="flex flex-col flex-1/2 items-center justify-center">
+        <div className="flex flex-col flex-1/2 items-center">
           <div className="flex flex-col items-center m-2">
             <div className="font-semibold">Name</div>
             <div className="text-sm">{eventVenue.venueName}</div>
@@ -88,14 +101,35 @@ const EventVenue = ({ eventVenue }: EventVenueProps) => {
         </div>
       </div>
 
-      {/* Show on Google Maps */}
       <div className="text-center mt-5">
-        <button>
-            
+        <button
+          onClick={() => setMapOpen(true)} 
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          Show on Google Maps
         </button>
       </div>
+
+      <Dialog open={mapOpen} onClose={() => setMapOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>Venue Location</DialogTitle>
+        <DialogContent>
+          {isLoaded && isValidLocation ? (
+            <GoogleMap mapContainerStyle={{ width: "100%", height: "400px" }} center={center!} zoom={14}>
+              <Marker position={center!} />
+            </GoogleMap>
+          ) : (
+            <p className="text-red-500">Location not available</p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setMapOpen(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
+
 };
 
 export default EventVenue;
