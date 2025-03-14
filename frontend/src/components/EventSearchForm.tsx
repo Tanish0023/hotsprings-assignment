@@ -22,7 +22,7 @@ const eventSchema = z.object({
 type EventFormData = z.infer<typeof eventSchema>;
 
 interface EventSearchFormProps {
-  onSubmit: (eventData: EventFormData) => Promise<void>; // Function to handle form submission
+  onSubmit: (eventData: EventFormData) => Promise<void>; 
 }
 
 const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
@@ -37,7 +37,6 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
     resolver: zodResolver(eventSchema),
   });
 
-  // Function to Auto-Detect Location
   const autoDetectLocation = async (checked: boolean) => {
     setUseMyLocation(checked);
 
@@ -68,7 +67,6 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
       <KeywordAutocomplete onSelect={(keyword) => setValue("keyword", keyword)} />
 
       <div className="grid sm:grid-cols-2 gap-4">
-        {/* Distance Input */}
         <div>
           <label className="block font-semibold">Distance (miles)</label>
           <input
@@ -80,7 +78,6 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
           {errors.distance && <p className="text-red-500 text-sm">{errors.distance.message}</p>}
         </div>
 
-        {/* Category Dropdown */}
         <div>
           <label className="block font-semibold">Category</label>
           <select
@@ -98,7 +95,6 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
         </div>
       </div>
 
-      {/* Location Input & Auto-Detect Checkbox */}
       <div>
         <label className="block font-semibold">Location</label>
         <input
@@ -106,7 +102,7 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
           {...register("location")}
           placeholder="Enter location"
           className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 bg-transparent"
-          disabled={useMyLocation} // Disable input if auto-detect is enabled
+          disabled={useMyLocation}
         />
         {errors.location && <p className="text-red-500 text-sm">{errors.location.message}</p>}
 
@@ -121,7 +117,6 @@ const EventSearchForm = ({ onSubmit }: EventSearchFormProps) => {
         </div>
       </div>
 
-      {/* Submit & Clear Buttons */}
       <div className="flex gap-4">
         <button
           type="submit"

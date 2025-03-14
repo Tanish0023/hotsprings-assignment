@@ -4,7 +4,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="w-full my-3 flex items-center justify-end px-6 gap-4 text-lg text-white">
+    <nav className="w-full my-3 flex items-center justify-end px-6 gap-4 text-md text-white">
       <Link
         to="/search"
         className={`py-2 px-3 ${

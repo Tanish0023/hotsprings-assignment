@@ -10,7 +10,6 @@ import {
   TableSortLabel,
   TableFooter,
 } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
 
 interface Event {
   id: string;
@@ -28,8 +27,6 @@ interface EventTableProps {
 }
 
 const EventTable = ({ events, onClickDisplay }: EventTableProps) => {
-  // const navigate = useNavigate();
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 

@@ -25,16 +25,19 @@ const FavTable = ({ events, setEvents }: FavTableProps) => {
   };
 
   return (
-    <TableContainer component={Paper} className="bg-transparent border border-white/30 text-white mt-6">
+    <TableContainer 
+      component={Paper} className="bg-transparent! rounded-xl! backdrop-blur-2xl! md:max-w-[85%] border! border-white/30! mt-6"
+      
+    >
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell className="text-white">Date</TableCell>
-            <TableCell className="text-white">Time</TableCell>
-            <TableCell className="text-white">Event</TableCell>
-            <TableCell className="text-white">Category</TableCell>
-            <TableCell className="text-white">Venue</TableCell>
-            <TableCell className="text-white">Actions</TableCell>
+            <TableCell className="text-white!">Date</TableCell>
+            <TableCell className="text-white!">Time</TableCell>
+            <TableCell className="text-white!">Event</TableCell>
+            <TableCell className="text-white!">Category</TableCell>
+            <TableCell className="text-white!">Venue</TableCell>
+            <TableCell className="text-white!">Actions</TableCell>
           </TableRow>
         </TableHead>
 
@@ -42,11 +45,11 @@ const FavTable = ({ events, setEvents }: FavTableProps) => {
           {events.length > 0 ? (
             events.map((event) => (
               <TableRow key={event.id}>
-                <TableCell className="text-white">{event.localDate}</TableCell>
-                <TableCell className="text-white">{event.localTime}</TableCell>
-                <TableCell className="text-white">{event.event}</TableCell>
-                <TableCell className="text-white">{event.category}</TableCell>
-                <TableCell className="text-white">{event.venue}</TableCell>
+                <TableCell className="text-white!">{event.localDate}</TableCell>
+                <TableCell className="text-white!">{event.localTime}</TableCell>
+                <TableCell className="text-white!">{event.event}</TableCell>
+                <TableCell className="text-white!">{event.category}</TableCell>
+                <TableCell className="text-white!">{event.venue}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleDelete(event.id)}>
                     <DeleteIcon sx={{ color: "red" }} />
@@ -56,7 +59,7 @@ const FavTable = ({ events, setEvents }: FavTableProps) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center text-white">
+              <TableCell colSpan={6} className="text-center text-white!">
                 No favorite events found.
               </TableCell>
             </TableRow>

@@ -68,13 +68,13 @@ const CreateEventPage = () => {
 
       {eventCardDetail ? (
         <div className="w-full max-w-6xl">
-          <h2 className="text-xl font-bold text-center pt-12 text-white mb-4">Event Detail</h2>
+          <h2 className="text-2xl font-bold text-center pt-12 text-white mb-4">Event Detail</h2>
           <EventsCard event={eventCardDetail} removeEventDetail={removeEventDetail} />
         </div>
       ) : (
         events.length > 0 && (
           <div className="w-full max-w-6xl">
-            <h2 className="text-xl font-bold text-center pt-12 text-white mb-4">Search Results</h2>
+            <h2 className="text-2xl font-bold text-center pt-12 text-white mb-4">Search Results</h2>
             <EventTable events={events} onClickDisplay={onClickEventCardDisplay} />
           </div>
         )

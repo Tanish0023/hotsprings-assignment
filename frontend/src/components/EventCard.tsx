@@ -127,7 +127,7 @@ export default function EventsCard({ event, removeEventDetail }: EventCardProps)
   
 
   return (
-    <div className="backdrop-blur-2xl border lg:w-[80%] border-white/30 text-white rounded-2xl ">
+    <div className="backdrop-blur-2xl border border-white/30 text-white rounded-2xl ">
       <button 
         className="text-lg m-4 flex items-center gap-1.5 hover:underline"
         onClick={removeEventDetail}
