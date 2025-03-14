@@ -31,3 +31,8 @@ class EventDetailSerializer(serializers.Serializer):
     openHours = serializers.CharField(default="N/A")
     generalRule = serializers.CharField(default="N/A")
     childRule = serializers.CharField(default="N/A")
+
+class KeywordSuggestionsSerializer(serializers.Serializer):
+    suggestions = serializers.ListField(
+        child=serializers.CharField(), 
+    )

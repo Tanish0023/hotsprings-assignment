@@ -52,8 +52,14 @@ const EventDetail = ({eventDetail}: EventDetailProps) => {
                         </div>
                     </div>
                 </div>
-                <div className="flex-1/2">
-                    <img src={`${eventDetail.seatMap}`} alt={`${eventDetail.venue}`} />
+                <div className="flex-1/2 text-center">
+                    {!!eventDetail.seatMap ? 
+                    <img src={`${eventDetail.seatMap}`} alt={`${eventDetail.venue}`} /> : 
+                    <h1
+                        className="text-red-500"
+                    >Seat Map not available</h1>
+                }
+
                 </div>
             </div>
 

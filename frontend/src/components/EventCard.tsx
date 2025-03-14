@@ -1,9 +1,11 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import EventDetail from './EventDetail';
-import EventVenue from './EventVenue';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import EventDetail from "./EventDetail";
+import EventVenue from "./EventVenue";
+import { ArrowBack, Favorite } from "@mui/icons-material";
+import toast from "react-hot-toast";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -11,43 +13,44 @@ interface TabPanelProps {
   value: number;
 }
 
-interface EventCard{
-    id: string;
-    name: string;
-    localDate: string;
-    localTime: string;
-    artists: string;
-    venue: string;
-    genres: string;
-    priceRange: string;
-    ticketStatus: "onsale" | "offsale" | "canceled" | "postponed" | "rescheduled";
-    ticketUrl: string;
-    seatMap: string;
-    venueName:string;
-    address: string;
-    longitude: string;
-    latitude: string;
-    city: string;
-    phoneNumber: string;
-    openHours: string;
-    generalRule: string;
-    childRule: string;
+interface EventCard {
+  id: string;
+  name: string;
+  localDate: string;
+  localTime: string;
+  artists: string;
+  venue: string;
+  genres: string;
+  priceRange: string;
+  ticketStatus: "onsale" | "offsale" | "canceled" | "postponed" | "rescheduled";
+  ticketUrl: string;
+  seatMap: string;
+  venueName: string;
+  address: string;
+  longitude: string;
+  latitude: string;
+  city: string;
+  phoneNumber: string;
+  openHours: string;
+  generalRule: string;
+  childRule: string;
 }
 
 interface EventCardProps {
-    event: EventCard;
-  }
+  event: EventCard;
+  removeEventDetail: () => void;
+}
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
       {...other}
+      className="min-w-[80%]"
     >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
@@ -56,17 +59,21 @@ function CustomTabPanel(props: TabPanelProps) {
 
 function a11yProps(index: number) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `tab-${index}`,
+    "aria-controls": `tabpanel-${index}`,
   };
 }
 
-export default function EventsCard({event}: EventCardProps) {
+export default function EventsCard({ event, removeEventDetail }: EventCardProps) {
   const [value, setValue] = React.useState(0);
+  const [isFav, setIsFav] = React.useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(event);
-    
+  React.useEffect(() => {
+    const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    setIsFav(storedEvents.some((favEvent: { id: string }) => favEvent.id === event.id));
+  }, [event.id]);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -79,8 +86,8 @@ export default function EventsCard({event}: EventCardProps) {
     priceRange: event.priceRange,
     ticketStatus: event.ticketStatus,
     ticketUrl: event.ticketUrl,
-    seatMap: event.seatMap
-  }
+    seatMap: event.seatMap,
+  };
 
   const EventVenueProp = {
     venueName: event.venueName,
@@ -91,41 +98,77 @@ export default function EventsCard({event}: EventCardProps) {
     phoneNumber: event.phoneNumber,
     openHours: event.openHours,
     generalRule: event.generalRule,
-    childRule: event.childRule
-  }
+    childRule: event.childRule,
+  };
 
+  const toggleFav = () => {
+    let storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
   
-  return (
-    <div className='backdrop-blur-2xl border lg:w-[80%] border-white/30 text-white rounded-2xl flex flex-col items-center'>
-      <div className='text-xl md:text-3xl my-4 p-3 text-center md:p-6 text-white'>
-        {event.name}
-      </div>
-      <div className='w-full'>
-        <Box sx={{ width: '100%', color: "white" }}>
-          <Box 
-            sx={{ 
-              borderBottom: 1, 
-              borderColor: 'divider',
-              backgroundColor: "#75a682",
-              display: "flex", 
-              justifyContent: "center", 
-            }}
-          >
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" 
-                sx={{ color: "white", "& .Mui-selected": { color: "white" } }}
+    if (isFav) {
+      storedEvents = storedEvents.filter((favEvent: { id: string }) => favEvent.id !== event.id);
+      toast.success("Removed from favorites");
+    } else {
+      const newEvent = {
+        id: event.id,
+        localDate: event.localDate,
+        localTime: event.localTime,
+        event: event.name,       
+        category: event.genres,  
+        venue: event.venue,   
+      };
+      
+      storedEvents.push(newEvent);
+      toast.success("Added to favorites");
+    }
+  
+    localStorage.setItem("events", JSON.stringify(storedEvents));
+    setIsFav(!isFav);
+  };
+  
 
+  return (
+    <div className="backdrop-blur-2xl border lg:w-[80%] border-white/30 text-white rounded-2xl ">
+      <button 
+        className="text-lg m-4 flex items-center gap-1.5 hover:underline"
+        onClick={removeEventDetail}
+      >
+        <ArrowBack />  Back
+      </button>
+      <div className="flex flex-col items-center">
+        <div className="text-xl md:text-3xl mb-4 p-3 text-center md:p-6 text-white flex items-center justify-center gap-2.5">
+          {event.name}
+          <Favorite
+            fontSize="large"
+            sx={{ color: isFav ? "red" : "white", cursor: "pointer" }}
+            onClick={toggleFav}
+          />
+        </div>
+
+        <div className="w-full">
+          <Box sx={{ width: "100%", color: "white" }}>
+            <Box
+              sx={{
+                borderBottom: 1,
+                borderColor: "divider",
+                backgroundColor: "#75a682",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              <Tab label="Events" {...a11yProps(0)} sx={{ color: "white" }} />
-              <Tab label="Venue" {...a11yProps(1)} sx={{ color: "white" }} />
-            </Tabs>
+              <Tabs value={value} onChange={handleChange} aria-label="event-tabs">
+                <Tab label="Event Details" {...a11yProps(0)} sx={{ color: "white" }} />
+                <Tab label="Venue Info" {...a11yProps(1)} sx={{ color: "white" }} />
+              </Tabs>
+            </Box>
+
+            <CustomTabPanel value={value} index={0}>
+              <EventDetail eventDetail={EventDetailProp} />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              <EventVenue eventVenue={EventVenueProp} />
+            </CustomTabPanel>
           </Box>
-          <CustomTabPanel value={value} index={0}>
-            <EventDetail eventDetail={EventDetailProp} />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <EventVenue eventVenue={EventVenueProp} />
-          </CustomTabPanel>
-        </Box>
+        </div>
       </div>
     </div>
   );
