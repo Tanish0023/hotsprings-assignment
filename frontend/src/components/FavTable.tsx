@@ -26,18 +26,17 @@ const FavTable = ({ events, setEvents }: FavTableProps) => {
 
   return (
     <TableContainer 
-      component={Paper} className="bg-transparent! rounded-xl! backdrop-blur-2xl! md:max-w-[85%] border! border-white/30! mt-6"
-      
+      component={Paper} className="bg-transparent! sm:rounded-xl! backdrop-blur-2xl! md:max-w-[85%] border! border-white/30! mt-6"
     >
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell className="text-white!">Date</TableCell>
-            <TableCell className="text-white!">Time</TableCell>
-            <TableCell className="text-white!">Event</TableCell>
-            <TableCell className="text-white!">Category</TableCell>
-            <TableCell className="text-white!">Venue</TableCell>
-            <TableCell className="text-white!">Actions</TableCell>
+            <TableCell className="text-white! text-center!">Date</TableCell>
+            <TableCell className="text-white! text-center!">Time</TableCell>
+            <TableCell className="text-white! text-center!">Event</TableCell>
+            <TableCell className="text-white! text-center!">Category</TableCell>
+            <TableCell className="text-white! text-center!">Venue</TableCell>
+            <TableCell className="text-white! text-center!">Actions</TableCell>
           </TableRow>
         </TableHead>
 
@@ -45,11 +44,11 @@ const FavTable = ({ events, setEvents }: FavTableProps) => {
           {events.length > 0 ? (
             events.map((event) => (
               <TableRow key={event.id}>
-                <TableCell className="text-white!">{event.localDate}</TableCell>
-                <TableCell className="text-white!">{event.localTime}</TableCell>
-                <TableCell className="text-white!">{event.event}</TableCell>
-                <TableCell className="text-white!">{event.category}</TableCell>
-                <TableCell className="text-white!">{event.venue}</TableCell>
+                <TableCell className="text-white! text-center!">{event.localDate}</TableCell>
+                <TableCell className="text-white! text-center!">{event.localTime}</TableCell>
+                <TableCell className="text-white! text-center!">{event.event}</TableCell>
+                <TableCell className="text-white! text-center!">{event.category}</TableCell>
+                <TableCell className="text-white! text-center!">{event.venue}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleDelete(event.id)}>
                     <DeleteIcon sx={{ color: "red" }} />

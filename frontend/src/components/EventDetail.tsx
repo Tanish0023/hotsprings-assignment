@@ -16,6 +16,17 @@ interface EventDetailProps{
     eventDetail: EventDetail
 }
 
+const getTicketStatusColor = (status: string) => {
+    switch (status) {
+        case "onsale": return "bg-green-500";
+        case "offsale": return "bg-red-500";
+        case "canceled": return "bg-black";
+        case "postponed": return "bg-orange-500"
+        case "rescheduled": return "bg-orange-500";
+        default: return "bg-gray-500";
+    }
+};
+
 const EventDetail = ({eventDetail}: EventDetailProps) => {
     return ( 
         <div>
@@ -43,7 +54,9 @@ const EventDetail = ({eventDetail}: EventDetailProps) => {
                     </div>
                     <div className="flex flex-col items-center m-2">
                         <div className="font-semibold">Ticket Status</div>
-                        <div className="text-sm">{eventDetail.ticketStatus}</div>
+                        <div className={`text-md font-semibold py-1.5 px-2 rounded-xl ${getTicketStatusColor(eventDetail.ticketStatus)}`}>
+                            {eventDetail.ticketStatus.charAt(0).toUpperCase() + eventDetail.ticketStatus.slice(1)}
+                        </div>
                     </div>
                     <div className="flex flex-col items-center m-2">
                         <div className="font-semibold">Buy Ticket At:</div>
