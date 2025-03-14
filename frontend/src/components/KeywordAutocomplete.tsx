@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import axios from "axios";
 
-const API_KEY = "Tq319UhTyemoFfWHeW0I5HWO3QSmeMHY";
+const API_KEY = import.meta.env.VITE_TICKETMASTER_API!;
 
 const KeywordAutocomplete = ({ onSelect }: { onSelect: (keyword: string) => void }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);  
 
   useEffect(() => {
     if (inputValue.length < 2) {

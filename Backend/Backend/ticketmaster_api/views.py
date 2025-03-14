@@ -72,7 +72,6 @@ class TicketmasterEventsView(APIView):
 
 class EventDetailView(APIView):
     def get(self, request, event_id):
-        print(event_id)
         if not event_id:
             return Response({"error": "Event ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -109,3 +108,24 @@ class EventDetailView(APIView):
 
         serializer = EventDetailSerializer(event_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class KeywordSuggestionsView(APIView):
+    def get(self, request):
+        keyword = request.GET.get("keyword", "").strip()
+    
+        if not keyword:
+            return Response({"error": "Keyword is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        ticketmaster_url = "https://app.ticketmaster.com/discovery/v2/suggest"
+        params = {"apikey": TICKETMASTER_API_KEY, "keyword": keyword}
+
+        response = requests.get(ticketmaster_url, params=params)
+        data = response.json()
+
+        suggestions = [
+            attraction["name"]
+            for attraction in data.get("_embedded", {}).get("attractions", [])
+        ]
+
+        return Response({"suggestions": suggestions}, status=status.HTTP_200_OK)
+
