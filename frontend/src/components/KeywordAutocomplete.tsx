@@ -2,34 +2,25 @@ import { useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import axios from "axios";
 
-const API_KEY = import.meta.env.VITE_TICKETMASTER_API!;
-
 const KeywordAutocomplete = ({ onSelect }: { onSelect: (keyword: string) => void }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (inputValue.length < 2) {
-      setOptions([]); // Clear options if input is too short
+      setOptions([]);
       return;
     }
 
     const fetchSuggestions = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://app.ticketmaster.com/discovery/v2/suggest`, {
-          params: {
-            apikey: API_KEY,
-            keyword: inputValue,
-          },
+        const response = await axios.get(`http://127.0.0.1:8000/api/suggestions/`, {
+          params: { keyword: inputValue },
         });
 
-        // Extract suggestions
-        const suggestions =
-          response.data._embedded?.attractions?.map((item: any) => item.name) || [];
-
-        setOptions(suggestions);
+        setOptions(response.data.suggestions);
       } catch (error) {
         console.error("Error fetching suggestions", error);
       } finally {
@@ -37,9 +28,8 @@ const KeywordAutocomplete = ({ onSelect }: { onSelect: (keyword: string) => void
       }
     };
 
-    const timer = setTimeout(fetchSuggestions, 500); // Debounce API call
-
-    return () => clearTimeout(timer); // Cleanup on unmount
+    const timer = setTimeout(fetchSuggestions, 500);
+    return () => clearTimeout(timer);
   }, [inputValue]);
 
   return (
@@ -49,11 +39,11 @@ const KeywordAutocomplete = ({ onSelect }: { onSelect: (keyword: string) => void
       loading={loading}
       inputValue={inputValue}
       onInputChange={(_, newValue) => {
-        setInputValue(newValue)
-        onSelect(newValue || "")
+        setInputValue(newValue);
+        onSelect(newValue || "");
       }}
       renderOption={(props, option, { index }) => (
-        <li {...props} key={`${option}-${index}`}>{option}</li> // ✅ Unique key
+        <li {...props} key={`${option}-${index}`}>{option}</li>
       )}
       renderInput={(params) => (
         <TextField
@@ -61,23 +51,12 @@ const KeywordAutocomplete = ({ onSelect }: { onSelect: (keyword: string) => void
           label="Keyword"
           variant="outlined"
           sx={{
-            "& .MuiInputBase-input": {
-              color: "white", // Ensure input text is white
-            },
-            "& .MuiInputLabel-root": {
-              color: "lightgray", // Ensure label text is white
-            },
+            "& .MuiInputBase-input": { color: "white" },
+            "& .MuiInputLabel-root": { color: "lightgray" },
             "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "white", // Border color
-              },
-              "&:hover fieldset": {
-                borderColor: "lightgray", // Border color on hover
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "white", // Border color when focused
-                color: "white"
-              },
+              "& fieldset": { borderColor: "white" },
+              "&:hover fieldset": { borderColor: "lightgray" },
+              "&.Mui-focused fieldset": { borderColor: "white" },
             },
           }}
         />

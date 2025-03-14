@@ -122,9 +122,12 @@ class KeywordSuggestionsView(APIView):
         response = requests.get(ticketmaster_url, params=params)
         data = response.json()
 
+        venuesSuggestion = data.get("_embedded", {}).get("venues", [])
+        attractionSuggestion = data.get("_embedded", {}).get("attractions", [])
+        combinedSuggestion = venuesSuggestion + attractionSuggestion
+
         suggestions = [
-            attraction["name"]
-            for attraction in data.get("_embedded", {}).get("attractions", [])
+            attraction["name"] for attraction in combinedSuggestion
         ]
 
         return Response({"suggestions": suggestions}, status=status.HTTP_200_OK)
