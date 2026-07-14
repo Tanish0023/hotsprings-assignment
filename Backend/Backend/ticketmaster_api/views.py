@@ -1,6 +1,6 @@
 import requests
 import os
-import uuid  
+import uuid
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,14 +13,46 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 TICKETMASTER_API_KEY = os.getenv("TICKETMASTER_API_KEY")
 
 def get_lat_long(location_name):
-    geo_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={location_name}&key={GOOGLE_API_KEY}"
-    response = requests.get(geo_url)
-    data = response.json()
+    # Accept raw "lat,lng" input directly.
+    try:
+        lat_lng = [part.strip() for part in location_name.split(",")]
+        if len(lat_lng) == 2:
+            return float(lat_lng[0]), float(lat_lng[1])
+    except (ValueError, AttributeError):
+        pass
 
-    if data.get("status") == "OK":
-        location = data["results"][0]["geometry"]["location"]
-        return location["lat"], location["lng"]
-    
+    # Prefer Google Geocoding when API key is configured.
+    if GOOGLE_API_KEY:
+        try:
+            response = requests.get(
+                "https://maps.googleapis.com/maps/api/geocode/json",
+                params={"address": location_name, "key": GOOGLE_API_KEY},
+                timeout=10,
+            )
+            response.raise_for_status()
+            data = response.json()
+
+            if data.get("status") == "OK" and data.get("results"):
+                location = data["results"][0]["geometry"]["location"]
+                return location["lat"], location["lng"]
+        except requests.RequestException:
+            pass
+
+    # Fallback to OpenStreetMap Nominatim when Google fails/rejects.
+    try:
+        response = requests.get(
+            "https://nominatim.openstreetmap.org/search",
+            params={"q": location_name, "format": "json", "limit": 1},
+            headers={"User-Agent": "hotsprings-app/1.0"},
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+        if data:
+            return float(data[0]["lat"]), float(data[0]["lon"])
+    except (requests.RequestException, ValueError, KeyError, IndexError, TypeError):
+        pass
+
     return None, None
 
 class TicketmasterEventsView(APIView):
@@ -56,7 +88,7 @@ class TicketmasterEventsView(APIView):
         if "_embedded" in data:
             for event in data["_embedded"].get("events", []):
                 event_data = {
-                    "id": event.get("id", str(uuid.uuid4())),  
+                    "id": event.get("id", str(uuid.uuid4())),
                     "name": event.get("name", "N/A"),
                     "localDate": event["dates"]["start"].get("localDate", "N/A"),
                     "localTime": event["dates"]["start"].get("localTime", "N/A"),
@@ -133,10 +165,10 @@ class EventDetailView(APIView):
 class KeywordSuggestionsView(APIView):
     def get(self, request):
         keyword = request.GET.get("keyword", "").strip()
-    
+
         if not keyword:
             return Response({"error": "Keyword is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         ticketmaster_url = "https://app.ticketmaster.com/discovery/v2/suggest"
         params = {"apikey": TICKETMASTER_API_KEY, "keyword": keyword}
 
